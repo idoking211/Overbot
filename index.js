@@ -122,6 +122,17 @@ if( swearWords.some(word => message.content.includes(word)) ) {
 
     return;
   }
+  if (cmd === `${prefix}bc`){
+        message.guild.members.forEach(m => {
+        if(!message.member.hasPermission('ADMINISTRATOR')) return;
+                 var bc = new Discord.RichEmbed()
+                 .addField(' » Message: ', args)
+                 .setColor('#ff0000')
+                 // m.send(`[${m}]`);
+                 m.send(`${m}`,{embed: bc});
+             });
+  }
+  
 
   if(cmd === `${prefix}warn`){
 
