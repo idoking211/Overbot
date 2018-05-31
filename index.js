@@ -226,7 +226,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
     .setDescription("Help Commands")
     .setColor("#268ccf")
     .setThumbnail(bicon)
-    .addField("Moderation Commands","?kick (user) (reason) - Kick a User.\n?ban (user) (reason) - Ban a User.\n?report (user) (reason) - report about User.\n?warn (user) (reason) - Warn a User.")
+    .addField("Moderation Commands","?kick (user) (reason) - Kick a User.\n?bc (message) - BC to everyone on the server with the bot.\n?ban (user) (reason) - Ban a User.\n?report (user) (reason) - report about User.\n?warn (user) (reason) - Warn a User.")
     .addField("Server Commands","?serverinfo - Server Informations.\n?membercount - Member Count.\n?say (message) - say your message.\n?poll (question) - Poll about Question\n?avatar @user - Avatar of the user.\n?ping - Ping Pong");
 
     return message.author.send(botembed);
