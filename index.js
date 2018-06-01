@@ -236,7 +236,6 @@ if( swearWords.some(word => message.content.includes(word)) ) {
 
     return message.author.send(botembed);
   }
-
 const prefix = botconfig.prefix;
 bot.on("message", (message) => {
 
