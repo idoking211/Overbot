@@ -49,7 +49,7 @@ bot.on("message", async message => {
 
     //!kick @user break the rules
     let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!kUser) return message.channel.send("/kick [user] [reason]");
+    if(!kUser) return message.channel.send("?kick [user] [reason]");
     let kReason = args.join(" ").slice(22);
     if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("No can do pal!");
     if(kUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("That person can't be kicked!");
@@ -79,7 +79,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   if(cmd === `${prefix}ban`){
 
     let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!bUser) return message.channel.send("/ban [user] [reason]");
+    if(!bUser) return message.channel.send("?ban [user] [reason]");
     let bReason = args.join(" ").slice(22);
     if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.channel.send("No can do pal!");
     if(bUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("That person can't be kicked!");
@@ -104,7 +104,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
 
     //!report @user this is the reason
     let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!rUser) return message.channel.send("/report [user] [reason]");
+    if(!rUser) return message.channel.send("?report [user] [reason]");
     let rreason = args.join(" ").slice(22);
 
     let reportEmbed = new Discord.RichEmbed()
@@ -138,7 +138,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
 
     //!warn @user this is the reason
     let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!rUser) return message.channel.send("/warn [user] [reason]");
+    if(!rUser) return message.channel.send("?warn [user] [reason]");
     let rreason = args.join(" ").slice(22);
 
     let reportEmbed = new Discord.RichEmbed()
@@ -189,7 +189,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   let question = args.slice(0).join(" ");
 
   if (args.length === 0)
-  return message.reply('Invalid Format: /poll <Question>')
+  return message.reply('Invalid Format: ?poll <Question>')
 
   const embed = new Discord.RichEmbed()
   .setTitle("A Poll Has Been Started!")
@@ -214,7 +214,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
     let botembed = new Discord.RichEmbed()
     .setDescription("Creators of the Bot")
     .setColor("#ff9f04")
-    .addField("\nCreators","<@354952398772371458>\n<@311604263379795970>")
+    .addField("\nCreators","<@354952398772371458>")
 
     return message.channel.send(botembed);
 }
@@ -226,7 +226,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
     .setDescription("Help Commands")
     .setColor("#268ccf")
     .setThumbnail(bicon)
-    .addField("Moderation Commands","?kick (user) (reason) - Kick a User.\n?bc (message) - BC to everyone on the server with the bot.\n?ban (user) (reason) - Ban a User.\n?report (user) (reason) - report about User.\n?warn (user) (reason) - Warn a User.")
+    .addField("Moderation Commands","?kick (user) (reason) - Kick a User.\n?bc (message) - BC to everyone on the server with the bot (only for bot owners!).\n?ban (user) (reason) - Ban a User.\n?report (user) (reason) - report about User.\n?warn (user) (reason) - Warn a User.")
     .addField("Server Commands","?serverinfo - Server Informations.\n?membercount - Member Count.\n?say (message) - say your message.\n?poll (question) - Poll about Question\n?avatar @user - Avatar of the user.\n?ping - Ping Pong");
 
     return message.author.send(botembed);
