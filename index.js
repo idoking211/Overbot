@@ -278,7 +278,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   .addField('Time', time)
   .addField('Reason', reason);
 
-  let auditlogchannel = message.guild.channels.find('name', 'logs');
+  let auditlogchannel = message.guild.channels.find('name', 'mod-log');
   if (!auditlogchannel) return errors.noLogChannel(message);
 
   message.delete().catch(O_o=>{});
