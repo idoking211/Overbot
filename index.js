@@ -36,6 +36,11 @@ bot.on('guildMemberRemove', member => {
   channel.send(`${member}, left the Server`);
 });
 
+//add role member
+bot.on('guildMemberAdd', (member) => {
+  member.addRole(member.guild.roles.find('name', member));
+});
+
 bot.on("message", async message => {
   if(message.author.bot) return;
   if(message.channel.type === "dm") return;
