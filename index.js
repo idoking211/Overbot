@@ -1,7 +1,7 @@
 const botconfig = require("./botconfig.json");
 const color = require("./color.json");
 const Discord = require("discord.js");
-
+const ms = require("ms");
 const bot = new Discord.Client({disableEveryone: true});
 
 const swearWords = ["fuck", "shit", "זונה", "חרא"];
@@ -236,57 +236,51 @@ if( swearWords.some(word => message.content.includes(word)) ) {
 
     return message.author.send(botembed);
   }
-  if(cmd === `${prefix}mute`){
+module.exports.run = async (bot, message, args) => {
 
-   if (!message.member.hasPermission('MANAGE_MESSAGES')) return errors.noPermissions(message, 'MANAGE_MESSAGES');
+  //!tempmute @user 1s/m/h/d
 
-  let user = message.guild.member(message.mentions.members.first());
-  if (!user) return errors.invalidUser(message);
-  if (user.hasPermission('MANAGE_MESSAGES')) return errors.cannotPunish(message);
-
-  let reason = args.slice(1).join(" ");
-  if (!reason) return errors.invalidReason(message);
-
-  let muterole = message.guild.roles.find('name', 'Muted');
-  if (!muterole) {
-    try {
+  let tomute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+  if(!tomute) return message.reply("Couldn't find user.");
+  if(tomute.hasPermission("MANAGE_MESSAGES")) return message.reply("Can't mute them!");
+  let muterole = message.guild.roles.find(`name`, "muted");
+  //start of create role
+  if(!muterole){
+    try{
       muterole = await message.guild.createRole({
-        name: 'Muted',
+        name: "muted",
         color: "#000000",
         permissions:[]
       })
       message.guild.channels.forEach(async (channel, id) => {
         await channel.overwritePermissions(muterole, {
           SEND_MESSAGES: false,
-          ADD_REACTIONS: false,
-          SPEAK: false
+          ADD_REACTIONS: false
         });
       });
-    } catch(e) {
+    }catch(e){
       console.log(e.stack);
     }
-  };
+  }
+  //end of create role
+  let mutetime = args[1];
+  if(!mutetime) return message.reply("You didn't specify a time!");
 
-  let time = args[1];
-  if (!time) return errors.invalidTime(message);
+  await(tomute.addRole(muterole.id));
+  message.reply(`<@${tomute.id}> has been muted for ${ms(ms(mutetime))}`);
 
-  let embed = new Discord.RichEmbed()
-  .setTitle('User has been Temporarily Muted')
-  .setColor("#FF0000")
-  .addField('User', `${user}`, true)
-  .addField('Staff', `${message.author}`, true)
-  .addField('Time', time)
-  .addField('Reason', reason);
+  setTimeout(function(){
+    tomute.removeRole(muterole.id);
+    message.channel.send(`<@${tomute.id}> has been unmuted!`);
+  }, ms(mutetime));
 
-  let auditlogchannel = message.guild.channels.find('name', 'mod-log');
-  if (!auditlogchannel) return errors.noLogChannel(message);
 
-  message.delete().catch(O_o=>{});
-  auditlogchannel.send(embed)
+//end of module
+}
 
-  await(user.addRole(muterole.id));
-  };
-});
+module.exports.help = {
+  name: "tempmute"
+}
 
 const prefix = botconfig.prefix;
 bot.on("message", (message) => {
