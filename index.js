@@ -339,9 +339,5 @@ if(message.content.startsWith(prefix + "avatar ")) { //IF for the command.
     msg.reply(`Check your Direct Messages!`)
   }
 
-  if (msg.content === '?avatar') {
-    msg.reply(`You need Mention someone`)
-}
-   });
 
 bot.login(process.env.BOT_TOKEN);
