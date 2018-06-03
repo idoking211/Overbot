@@ -140,11 +140,6 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   }
   
   
-  if (cmd === `${prefix}mute`){
-    let toMute = message.mentions.users.first() || message.guild.member(args[0]);
-    if(!toMute) return message.channel.sendMessage("you did not specify a user mention!");
-  return message.reply(toMute.username || toMute.user.username);
-  }
 
   if(cmd === `${prefix}warn`){
 
