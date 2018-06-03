@@ -8,6 +8,7 @@ const swearWords = ["fuck", "shit", "זונה", "חרא"];
 
 bot.on("ready", async () => {
   console.log(`Bot is Online!`);
+  
 bot.user.setActivity(`${bot.guilds.size} servers | ?help`, {type: "WATCHING"});
 });
 
@@ -66,7 +67,7 @@ bot.on("message", async message => {
     .addField("Staff", `<@${message.author.id}>`)
     .addField("Reason", kReason);
 
-    let kickChannel = message.guild.channels.find(`name`, "logs");
+    let kickChannel = message.guild.channels.find(`name`, "mod-log");
     if(!kickChannel) return message.channel.send("Can't find channel called `logs`");
 
     message.guild.member(kUser).kick(kReason);
@@ -96,7 +97,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
     .addField("**Staff**", `<@${message.author.id}>`)
     .addField("Reason", bReason);
 
-    let incidentchannel = message.guild.channels.find(`name`, "logs");
+    let incidentchannel = message.guild.channels.find(`name`, "mod-log");
     if(!incidentchannel) return message.channel.send("Can't find channel called `logs`");
 
     message.guild.member(bUser).ban(bReason);
@@ -119,7 +120,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
     .addField("Staff", `${message.author}`)
     .addField("Reason", rreason);
 
-    let reportschannel = message.guild.channels.find(`name`, "logs");
+    let reportschannel = message.guild.channels.find(`name`, "mod-log");
     if(!reportschannel) return message.channel.send("Couldn't find channel called `logs`");
 
     message.delete().catch(O_o=>{});
@@ -138,6 +139,12 @@ if( swearWords.some(word => message.content.includes(word)) ) {
              });
   }
   
+  
+  if (cmd === `${prefix}mute`){
+    let toMute = message.mentions.users.first() || message.guild.member(args[0]);
+    if(!toMute) return message.channel.sendMessage("you did not specify a user mention!");
+  return message.reply(toMute.username || toMute.user.username);
+  }
 
   if(cmd === `${prefix}warn`){
 
@@ -153,7 +160,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
     .addField("Staff", `${message.author}`)
     .addField("Reason", rreason);
 
-    let reportschannel = message.guild.channels.find(`name`, "logs");
+    let reportschannel = message.guild.channels.find(`name`, "mod-log");
     if(!reportschannel) return message.channel.send("Couldn't find channel called `logs`");
 
     message.delete().catch(O_o=>{});
