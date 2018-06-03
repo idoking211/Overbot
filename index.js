@@ -81,7 +81,89 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   message.reply("Swearing is not Allowed here");
   //Or just do message.delete();
 }
+    if(cmd === `${prefix}mute`){
 
+  if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("You dont have the Permission `MANAGE_MESSAGES`");
+  if(args[0] == "help"){
+    message.channel.send("Usage: ?mute <user> <reason>");
+    return;
+  }
+  let toMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+  if(toMute.hasPermission("MANAGE_MESSAGES")) return message.channel.send("You dont have the Permission `MANAGE_MESSAGES`");
+  let reason = args.join(" ").slice(22);
+
+  let muterole = message.guild.roles.find(`name`, "Muted");
+  if(!muterole){
+    try{
+      muterole = await message.guild.createRole({
+        name: "Muted",
+        color: "#000000",
+        permissions:[]
+      })
+      message.guild.channels.forEach(async (channel, id) => {
+        await channel.overwritePermissions(muterole, {
+          SEND_MESSAGES: false,
+          ADD_REACTIONS: false
+        });
+      });
+    }catch(e){
+      console.log(e.stack);
+    }
+  }
+
+  message.delete().catch(O_o=>{});
+
+  let muteembed = new Discord.RichEmbed()
+  .setDescription(`Mute`)
+  .setColor(Color.orange)
+  .addField("User", toMute)
+  .addField("Staff", `${message.author}`)
+  .addField("Reason", reason);
+
+  let incidentschannel = message.guild.channels.find(`name`, "mod-log");
+  if(!incidentschannel) return message.channel.send("Cannot find channel called `mod-log`");
+  incidentschannel.send(muteembed);
+
+  await(toMute.addRole(muterole.id));
+  message.channel.send(toMute + ` has been muted by: ${message.author} reason: ` + reason);
+
+}
+  
+  
+
+    if(cmd === `${prefix}unmute`){
+
+if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("You dont have the premission `MANAGE_MESSAGES`")
+
+let toMute = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
+if(!toMute) return message.channel.sendMessage("?unmute [@user]");
+
+let role = message.guild.roles.find(r => r.name === "Muted")
+
+if(!role || !toMute.roles.has(role.id)) return message.channel.sendMessage("This user is not Muted!");
+
+await toMute.removeRole(role);
+
+message.delete().catch(O_o=>{});
+
+let unmuteEmbed = new Discord.RichEmbed()
+.setDescription("**UnMute**")
+.setColor(Color.dark_red)
+.addField("**User**", toMute)
+.addField("**Staff**", `<@${message.author.id}>`);
+
+let UnBanchannel = message.guild.channels.find(`name`, "mod-log");
+if(!UnBanchannel) return message.channel.send("Can't find channel called `mod-log`");
+
+UnBanchannel.send(unmuteEmbed);
+message.channel.send(toMute + ` has been unmuted by: <@${message.author.id}>`);
+
+}
+  
+  
+  
+  
+  
   if(cmd === `${prefix}ban`){
 
     let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
@@ -233,7 +315,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
     .setDescription("Help Commands")
     .setColor("#268ccf")
     .setThumbnail(bicon)
-    .addField("Moderation Commands","?kick (user) (reason) - Kick a User.\n?bc (message) - BC to everyone on the server with the bot (only for bot owners!).\n?ban (user) (reason) - Ban a User.\n?report (user) (reason) - report about User.\n?warn (user) (reason) - Warn a User.")
+    .addField("Moderation Commands","?kick (user) (reason) - Kick a User.\n?mute (user) (reason) - mute user.\n?unmute (user) - unmute user.\n?bc (message) - BC to everyone on the server with the bot (only for bot owners!).\n?ban (user) (reason) - Ban a User.\n?report (user) (reason) - report about User.\n?warn (user) (reason) - Warn a User.")
     .addField("Server Commands","?serverinfo - Server Informations.\n?membercount - Member Count.\n?say (message) - say your message.\n?poll (question) - Poll about Question\n?avatar @user - Avatar of the user.\n?ping - Ping Pong");
 
     return message.author.send(botembed);
