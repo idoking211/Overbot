@@ -39,7 +39,7 @@ bot.on('guildMemberRemove', member => {
 
 //add role member
 bot.on('guildMemberAdd', (member) => {
-  member.addRole(member.guild.roles.find('name', member));
+  member.addRole(member.guild.roles.find('name', 'member'));
 });
 
 bot.on("message", async message => {
