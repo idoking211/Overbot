@@ -338,6 +338,7 @@ if(message.content.startsWith(prefix + "avatar ")) { //IF for the command.
   if (msg.content === '?help') {
     msg.reply(`Check your Direct Messages!`)
   }
-
+}
+});
 
 bot.login(process.env.BOT_TOKEN);
