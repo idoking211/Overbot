@@ -128,7 +128,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
 
     return;
   }
-  if (cmd === `${prefix}bc`){
+  if (cmd === `${prefix}obc`){
         message.guild.members.forEach(m => {
         if(!message.member.hasPermission('ADMINISTRATOR')) return;
                  var bc = new Discord.RichEmbed()
