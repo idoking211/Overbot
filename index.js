@@ -341,4 +341,4 @@ if(message.content.startsWith(prefix + "avatar ")) { //IF for the command.
 }
 });
 
-bot.login("NDUyODgwMzM5NzMyMzk4MDky.DfW04w.L13Xxx-73UbKZIz4pCe-Rc4zmbk");
+bot.login(process.env.BOT_TOKEN);
