@@ -28,6 +28,11 @@ bot.on('guildMemberAdd', member => {
   const channel = member.guild.channels.find('name', 'welcome');
   if (!channel) return;
   channel.send(`Welcome to the server, ${member}`);
+
+//auto role (member)
+
+    var role = member.guild.roles.find('name', 'member');
+    member.addRole(role)
 });
 
 //welcome left
@@ -35,11 +40,6 @@ bot.on('guildMemberRemove', member => {
   const channel = member.guild.channels.find('name', 'welcome');
   if (!channel) return;
   channel.send(`${member}, left the Server`);
-});
-
-//add role member
-bot.on('guildMemberAdd', (member) => {
-  member.addRole(member.guild.roles.find('name', 'member'));
 });
 
 bot.on("message", async message => {
@@ -238,10 +238,6 @@ if( swearWords.some(word => message.content.includes(word)) ) {
 
     return message.author.send(botembed);
   }
-const prefix = botconfig.prefix;
-bot.on("message", (message) => {
-
-  if(!message.content.startsWith(prefix)) return;
 
 if(message.content.startsWith(prefix + "avatar ")) { //IF for the command.
      if(message.mentions.users.first()) { //Check if the message has a mention in it.
@@ -252,21 +248,15 @@ if(message.content.startsWith(prefix + "avatar ")) { //IF for the command.
     } else {
           message.reply("Invalid user."); //Reply with a mention saying "Invalid user."
     }
- }});
 
-bot.on('message', msg => {
   if (msg.content === '?ping') {
     msg.reply(`Pong! The ping is **${(bot.ping).toFixed(0)}**ms!  :ping_pong:`)
   }
-});
 
-bot.on('message', msg => {
   if (msg.content === '?help') {
     msg.reply(`Check your Direct Messages!`)
   }
-});
 
-bot.on('message', msg => {
   if (msg.content === '?avatar') {
     msg.reply(`You need Mention someone`)
   }
