@@ -4,35 +4,29 @@ const Discord = require("discord.js");
 
 const bot = new Discord.Client({disableEveryone: true});
 
-const swearWords = ["fuck", "shit", "זונה", "חרא"];
+const swearWords = ["fuck", "שיט", "קקי", "חרא", "זבל", "פאק", "אמא", "זין", "קוקסינל", "הומו", "https://discord.gg/", "shit", "זונה", "חרא"];
 
 bot.on("ready", async () => {
   console.log(`Bot is Online!`);
-  
-bot.user.setActivity(`${bot.guilds.size} servers | ?help`, {type: "PLAYING"});
+bot.user.setActivity(`${bot.guilds.size} servers | .help`, {type: "WATCHING"});
 });
 
 // Updates the bot's status if he joins a server
 bot.on("guildCreate", guild => {
-bot.user.setActivity(`${bot.guilds.size} servers | ?help`, {type: "PLAYING"});
+bot.user.setActivity(`${bot.guilds.size} servers | .help`, {type: "WATCHING"});
 });
 
 /// Updates the bot's status if he leaves a servers
 bot.on("guildDelete", guild => {
 bot.user.setActivity(
-        `${bot.guilds.size} servers | ?help`, {type: "PLAYING"});
+        `${bot.guilds.size} servers | .help`, {type: "WATCHING"});
 });
 
 //welcome join
 bot.on('guildMemberAdd', member => {
   const channel = member.guild.channels.find('name', 'welcome');
   if (!channel) return;
-  channel.send(`Welcome to the server, ${member}`);
-
-//auto role (member)
-
-    var role = member.guild.roles.find('name', 'member');
-    member.addRole(role)
+  channel.send(`Welcome to the server ${server}, ${member}`);
 });
 
 //welcome left
@@ -41,6 +35,11 @@ bot.on('guildMemberRemove', member => {
   if (!channel) return;
   channel.send(`${member}, left the Server`);
 });
+
+      
+     
+
+
 
 bot.on("message", async message => {
   if(message.author.bot) return;
@@ -55,7 +54,7 @@ bot.on("message", async message => {
 
     //!kick @user break the rules
     let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!kUser) return message.channel.send("?kick [user] [reason]");
+    if(!kUser) return message.channel.send("/kick [user] [reason]");
     let kReason = args.join(" ").slice(22);
     if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("No can do pal!");
     if(kUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("That person can't be kicked!");
@@ -67,7 +66,7 @@ bot.on("message", async message => {
     .addField("Staff", `<@${message.author.id}>`)
     .addField("Reason", kReason);
 
-    let kickChannel = message.guild.channels.find(`name`, "mod-log");
+    let kickChannel = message.guild.channels.find(`name`, "logs");
     if(!kickChannel) return message.channel.send("Can't find channel called `logs`");
 
     message.guild.member(kUser).kick(kReason);
@@ -81,11 +80,164 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   message.reply("Swearing is not Allowed here");
   //Or just do message.delete();
 }
-    if(cmd === `${prefix}mute`){
+
+  if(cmd === `${prefix}ban`){
+
+    let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+    if(!bUser) return message.channel.send("/ban [user] [reason]");
+    let bReason = args.join(" ").slice(22);
+    if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.channel.send("No can do pal!");
+    if(bUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("That person can't be kicked!");
+
+    let banEmbed = new Discord.RichEmbed()
+    .setDescription("**Ban**")
+    .setColor("#bc0000")
+    .addField("**User**", `${bUser}`)
+    .addField("**Staff**", `<@${message.author.id}>`)
+    .addField("Reason", bReason);
+
+    let incidentchannel = message.guild.channels.find(`name`, "logs");
+    if(!incidentchannel) return message.channel.send("Can't find channel called `logs`");
+
+    message.guild.member(bUser).ban(bReason);
+    incidentchannel.send(banEmbed);
+
+    return;
+  }
+
+  if(cmd === `${prefix}report`){
+
+    //!report @user this is the reason
+    let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+    if(!rUser) return message.channel.send("/report [user] [reason]");
+    let rreason = args.join(" ").slice(22);
+
+    let reportEmbed = new Discord.RichEmbed()
+    .setDescription("Reports")
+    .setColor("#ffdc00")
+    .addField("User", `${rUser}`)
+    .addField("Staff", `${message.author}`)
+    .addField("Reason", rreason);
+
+    let reportschannel = message.guild.channels.find(`name`, "logs");
+    if(!reportschannel) return message.channel.send("Couldn't find channel called `logs`");
+
+    message.delete().catch(O_o=>{});
+    reportschannel.send(reportEmbed);
+
+    return;
+  }
+
+  if(cmd === `${prefix}warn`){
+
+    //!warn @user this is the reason
+    let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+    if(!rUser) return message.channel.send("/warn [user] [reason]");
+    let rreason = args.join(" ").slice(22);
+
+    let reportEmbed = new Discord.RichEmbed()
+    .setDescription("Warnings")
+    .setColor("#1b8fbd")
+    .addField("User", `${rUser}`)
+    .addField("Staff", `${message.author}`)
+    .addField("Reason", rreason);
+
+    let reportschannel = message.guild.channels.find(`name`, "logs");
+    if(!reportschannel) return message.channel.send("Couldn't find channel called `logs`");
+
+    message.delete().catch(O_o=>{});
+    reportschannel.send(reportEmbed);
+
+    return;
+  }
+
+  if(cmd === `${prefix}serverinfo`){
+
+    let sicon = message.guild.iconURL;
+    let serverembed = new Discord.RichEmbed()
+    .setDescription("Server Information")
+    .setColor("#15f153")
+    .setThumbnail(sicon)
+    .addField("Server Name", message.guild.name)
+    .addField("Created On", message.guild.createdAt)
+    .addField("You Joined", message.member.joinedAt)
+    .addField("Total Members", message.guild.memberCount);
+
+    return message.channel.send(serverembed);
+  }
+  
+  
+
+  if(cmd === `${prefix}membercount`){
+
+    let sicon = message.guild.iconURL;
+    let serverembed = new Discord.RichEmbed()
+    .setDescription("**Member Count**")
+    .setColor("#eb8f1b")
+    .setThumbnail(sicon)
+    .addField("Members", message.guild.memberCount);
+
+    return message.channel.send(serverembed);
+  }
+
+  if (cmd === `${prefix}poll`){
+ 		message.delete()
+  let question = args.slice(0).join(" ");
+
+  if (args.length === 0)
+  return message.reply('Invalid Format: #poll <Question>')
+
+  const embed = new Discord.RichEmbed()
+  .setTitle("A Poll Has Been Started!")
+  .setColor("#5599ff")
+    .setDescription(`${question}`)
+    .setFooter(`Poll Started By: ${message.author.username}`, `${message.author.avatarURL}`)
+  const pollTopic = await message.channel.send({embed});
+  await pollTopic.react(`ג…`);
+  await pollTopic.react(`ג`);
+  const filter = (reaction) => reaction.emoji.name === 'ג…';
+  const collector = pollTopic.createReactionCollector(filter, { time: 15000 });
+  collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
+  collector.on('end', collected => console.log(`Collected ${collected.size} items`));
+}
+
+
+    if(cmd === `${prefix}clear`){
+
+  if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("You dont have the Permission `MANAGE_MESSAGES`");
+  if(!args[0]) return message.channel.send(".clear [amount of messages]");
+  message.channel.bulkDelete(args[0]).then(() => {
+    message.channel.send(`:white_check_mark: Cleared ${args[0]} messages.`).then(msg => msg.delete(5000));
+  });
+}
+  
+  
+  if (cmd === `${prefix}creator`){
+    let botembed = new Discord.RichEmbed()
+    .setDescription("Creators of the Bot")
+    .setColor("#ff9f04")
+    .addField("\nCreators","<@354952398772371458>")
+
+    return message.channel.send(botembed);
+}
+
+  if(cmd === `${prefix}help`){
+
+    let bicon = bot.user.displayAvatarURL;
+    let botembed = new Discord.RichEmbed()
+    .setDescription("Help Commands")
+    .setColor("#268ccf")
+    .setThumbnail(bicon)
+    .addField("Moderation Commands",".kick (user) (reason) - Kick a User.\n.clear - clear the chat\n.clear - clear the chat\n.mute (user) - mute member\n.unmute (user) - unmute user.\n.ban (user) (reason) - Ban a User.\n.report (user) (reason) - report about User.\n.warn (user) (reason) - Warn a User.")
+   .addField("Server Commands",".serverinfo - Server Informations.\n.poll (question) - Poll about Question\n.ping - Ping Pong")
+   .addField("Creators",".creator - Bot Creators");
+    return message.author.send(botembed);
+  }
+  if(cmd === `${prefix}mute`){
 
   if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("You dont have the Permission `MANAGE_MESSAGES`");
   if(args[0] == "help"){
-    message.channel.send("Usage: ?mute <user> <reason>");
+    message.channel.send("Usage: /mute <user> <reason>");
     return;
   }
   let toMute = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
@@ -120,7 +272,7 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   .addField("Staff", `${message.author}`)
   .addField("Reason", reason);
 
-  let incidentschannel = message.guild.channels.find(`name`, "mod-log");
+  let incidentschannel = message.guild.channels.find(`name`, "logs");
   if(!incidentschannel) return message.channel.send("Cannot find channel called `mod-log`");
   incidentschannel.send(muteembed);
 
@@ -128,15 +280,12 @@ if( swearWords.some(word => message.content.includes(word)) ) {
   message.channel.send(toMute + ` has been muted by: ${message.author} reason: ` + reason);
 
 }
-  
-  
-
     if(cmd === `${prefix}unmute`){
 
 if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send("You dont have the premission `MANAGE_MESSAGES`")
 
 let toMute = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
-if(!toMute) return message.channel.sendMessage("?unmute [@user]");
+if(!toMute) return message.channel.sendMessage("/unmute [@user]");
 
 let role = message.guild.roles.find(r => r.name === "Muted")
 
@@ -152,66 +301,15 @@ let unmuteEmbed = new Discord.RichEmbed()
 .addField("**User**", toMute)
 .addField("**Staff**", `<@${message.author.id}>`);
 
-let UnBanchannel = message.guild.channels.find(`name`, "mod-log");
+let UnBanchannel = message.guild.channels.find(`name`, "logs");
 if(!UnBanchannel) return message.channel.send("Can't find channel called `mod-log`");
 
 UnBanchannel.send(unmuteEmbed);
 message.channel.send(toMute + ` has been unmuted by: <@${message.author.id}>`);
 
 }
-  
-  
-  
-  
-  
-  if(cmd === `${prefix}ban`){
-
-    let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!bUser) return message.channel.send("?ban [user] [reason]");
-    let bReason = args.join(" ").slice(22);
-    if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.channel.send("No can do pal!");
-    if(bUser.hasPermission("MANAGE_MESSAGES")) return message.channel.send("That person can't be kicked!");
-
-    let banEmbed = new Discord.RichEmbed()
-    .setDescription("**Ban**")
-    .setColor("#bc0000")
-    .addField("**User**", `${bUser}`)
-    .addField("**Staff**", `<@${message.author.id}>`)
-    .addField("Reason", bReason);
-
-    let incidentchannel = message.guild.channels.find(`name`, "mod-log");
-    if(!incidentchannel) return message.channel.send("Can't find channel called `logs`");
-
-    message.guild.member(bUser).ban(bReason);
-    incidentchannel.send(banEmbed);
-
-    return;
-  }
-
-  if(cmd === `${prefix}report`){
-
-    //!report @user this is the reason
-    let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!rUser) return message.channel.send("?report [user] [reason]");
-    let rreason = args.join(" ").slice(22);
-
-    let reportEmbed = new Discord.RichEmbed()
-    .setDescription("Reports")
-    .setColor("#ffdc00")
-    .addField("User", `${rUser}`)
-    .addField("Staff", `${message.author}`)
-    .addField("Reason", rreason);
-
-    let reportschannel = message.guild.channels.find(`name`, "mod-log");
-    if(!reportschannel) return message.channel.send("Couldn't find channel called `logs`");
-
-    message.delete().catch(O_o=>{});
-    reportschannel.send(reportEmbed);
-
-    return;
-  }
-  if (cmd === `${prefix}obc`){
-        message.guild.members.forEach(m => {
+    if(cmd === `${prefix}ownerbc`){ 
+      message.guild.members.forEach(m => {
         if(!message.member.hasPermission('ADMINISTRATOR')) return;
                  var bc = new Discord.RichEmbed()
                  .addField(' » Message: ', args)
@@ -219,107 +317,11 @@ message.channel.send(toMute + ` has been unmuted by: <@${message.author.id}>`);
                  // m.send(`[${m}]`);
                  m.send(`${m}`,{embed: bc});
              });
-  }
-  
-  
 
-  if(cmd === `${prefix}warn`){
+const prefix = botconfig.prefix;
+bot.on("message", (message) => {
 
-    //!warn @user this is the reason
-    let rUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if(!rUser) return message.channel.send("?warn [user] [reason]");
-    let rreason = args.join(" ").slice(22);
-
-    let reportEmbed = new Discord.RichEmbed()
-    .setDescription("Warnings")
-    .setColor("#1b8fbd")
-    .addField("User", `${rUser}`)
-    .addField("Staff", `${message.author}`)
-    .addField("Reason", rreason);
-
-    let reportschannel = message.guild.channels.find(`name`, "mod-log");
-    if(!reportschannel) return message.channel.send("Couldn't find channel called `logs`");
-
-    message.delete().catch(O_o=>{});
-    reportschannel.send(reportEmbed);
-
-    return;
-  }
-
-  if(cmd === `${prefix}serverinfo`){
-
-    let sicon = message.guild.iconURL;
-    let serverembed = new Discord.RichEmbed()
-    .setDescription("Server Information")
-    .setColor("#15f153")
-    .setThumbnail(sicon)
-    .addField("Server Name", message.guild.name)
-    .addField("Created On", message.guild.createdAt)
-    .addField("You Joined", message.member.joinedAt)
-    .addField("Total Members", message.guild.memberCount);
-
-    return message.channel.send(serverembed);
-  }
-
-  if(cmd === `${prefix}membercount`){
-
-    let sicon = message.guild.iconURL;
-    let serverembed = new Discord.RichEmbed()
-    .setDescription("**Member Count**")
-    .setColor("#eb8f1b")
-    .setThumbnail(sicon)
-    .addField("Members", message.guild.memberCount);
-
-    return message.channel.send(serverembed);
-  }
-
-  if (cmd === `${prefix}poll`){
- 		message.delete()
-  let question = args.slice(0).join(" ");
-
-  if (args.length === 0)
-  return message.reply('Invalid Format: ?poll <Question>')
-
-  const embed = new Discord.RichEmbed()
-  .setTitle("A Poll Has Been Started!")
-  .setColor("#5599ff")
-    .setDescription(`${question}`)
-    .setFooter(`Poll Started By: ${message.author.username}`, `${message.author.avatarURL}`)
-  const pollTopic = await message.channel.send({embed});
-  await pollTopic.react(`ג…`);
-  await pollTopic.react(`ג`);
-  const filter = (reaction) => reaction.emoji.name === 'ג…';
-  const collector = pollTopic.createReactionCollector(filter, { time: 15000 });
-  collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
-  collector.on('end', collected => console.log(`Collected ${collected.size} items`));
-}
-
-  if (cmd === `${prefix}say`){
- 		message.delete()
- 		message.channel.send(args.join(" "));
-}
-
-  if (cmd === `${prefix}creator`){
-    let botembed = new Discord.RichEmbed()
-    .setDescription("Creators of the Bot")
-    .setColor("#ff9f04")
-    .addField("\nCreators","<@354952398772371458>")
-
-    return message.channel.send(botembed);
-}
-
-  if(cmd === `${prefix}help`){
-
-    let bicon = bot.user.displayAvatarURL;
-    let botembed = new Discord.RichEmbed()
-    .setDescription("Help Commands")
-    .setColor("#268ccf")
-    .setThumbnail(bicon)
-    .addField("Moderation Commands","?kick (user) (reason) - Kick a User.\n?mute (user) (reason) - mute user.\n?unmute (user) - unmute user.\n?bc (message) - BC to everyone on the server with the bot (only for bot owners!).\n?ban (user) (reason) - Ban a User.\n?report (user) (reason) - report about User.\n?warn (user) (reason) - Warn a User.")
-    .addField("Server Commands","?serverinfo - Server Informations.\n?membercount - Member Count.\n?say (message) - say your message.\n?poll (question) - Poll about Question\n?avatar @user - Avatar of the user.\n?ping - Ping Pong");
-
-    return message.author.send(botembed);
-  }
+  if(!message.content.startsWith(prefix)) return;
 
 if(message.content.startsWith(prefix + "avatar ")) { //IF for the command.
      if(message.mentions.users.first()) { //Check if the message has a mention in it.
@@ -330,16 +332,23 @@ if(message.content.startsWith(prefix + "avatar ")) { //IF for the command.
     } else {
           message.reply("Invalid user."); //Reply with a mention saying "Invalid user."
     }
+ }});
 
-  if (msg.content === '?ping') {
+bot.on('message', msg => {
+  if (msg.content === '.ping') {
     msg.reply(`Pong! The ping is **${(bot.ping).toFixed(0)}**ms!  :ping_pong:`)
   }
-
-  if (msg.content === '?help') {
-    msg.reply(`Check your Direct Messages!`)
-  }
-}
 });
+
+bot.on('message', msg => {
+  if (msg.content === '.help') {
+    msg.reply(`Check Your DM!`)
+  }
+});
+bot.on('message', msg => {
+  if (msg.content === '.avatar') {
+    msg.reply(`You need Mention someone`)
+  }
+  });
 
 bot.login(process.env.BOT_TOKEN);
-});
